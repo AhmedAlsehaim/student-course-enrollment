@@ -26,3 +26,11 @@ Check out the live demo of the Student Registration and Dashboard System:
 [Live Demo](https://master.d9mwv28tn0w2w.amplifyapp.com/)
 
 
+## Photos
+![image](https://github.com/AhmedAlsehaim/student-course-enrollment/assets/107218615/b30b31b6-7ac2-4da3-84c4-42460a9bb68a)
+
+![image](https://github.com/AhmedAlsehaim/student-course-enrollment/assets/107218615/f104bc17-c83c-4553-9c91-1e70ee50dbcb)
+
+![image](https://github.com/AhmedAlsehaim/student-course-enrollment/assets/107218615/a6855fbc-de05-4ce1-83a2-9161a0009844)
+
+![image](https://github.com/AhmedAlsehaim/student-course-enrollment/assets/107218615/7a844ba2-fb21-47f8-9856-470fe72a2582)
