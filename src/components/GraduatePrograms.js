@@ -1,3 +1,4 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { supabase } from "../supabaseClient.js";
@@ -5,28 +6,31 @@ import { toast } from "react-toastify";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const GraduatePrograms = ({ user }) => {
+  // Initialize useForm to manage form state and validation
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const message = queryParams.get("message");
 
+  // State for loading indicator
+  const [loading, setLoading] = useState(false);
+
+  // Initialize navigation hook for redirecting
+  const navigate = useNavigate();
+
+  // Handle form submission
   const onSubmit = async (data) => {
     setLoading(true);
 
     try {
-      // Save the selected choices to the database
       const { levelOfStudy, program, faculty } = data;
 
       const {
         data: { user },
-      } = await supabase.auth.getUser(); //await is necessary to fix the problem of undefined
+      } = await supabase.auth.getUser();
       console.log(user);
+
       // Insert the selected choices into the database table
       const { data: userProgram, error } = await supabase
         .from("userProgram")
@@ -39,23 +43,27 @@ const GraduatePrograms = ({ user }) => {
           },
         ]);
 
+      // Display success message and navigate to StudentDashboard after successful submission
       toast.success("Program choices saved successfully!");
-      // Navigate to StudentDashboard after successful submission
       navigate("/student-dashboard");
     } catch (error) {
+      // Display error message and log error to console
       toast.error("Failed to save program choices. Please try again.");
       console.error(error);
     }
 
-    setLoading(false);
+    setLoading(false); // Set loading indicator to false
   };
 
   return (
-    <div style={{ maxWidth: "516px" }} className="container mt-5">
+    <div
+      style={{ maxWidth: "516px" }}
+      className="container mt-5 justify-content-center card shadow py-4"
+    >
       <h2 className="text-center mb-4">Graduate Programs</h2>
-      <div className="alert alert-warning mb-3" role="alert">
+      {/* <div className="alert alert-warning mb-3" role="alert">
         {message}
-      </div>
+      </div> */}
 
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Level of Study */}

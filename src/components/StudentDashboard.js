@@ -1,14 +1,19 @@
+import React, { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient.js";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import "../index.css";
 
 const StudentDashboard = () => {
   const navigate = useNavigate();
+
+  // State to store student data and loading status
   const [studentData, setStudentData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [profilePictureURL, setProfilePictureURL] = useState(null); // Added state for profile picture URL
 
+  // State to store profile picture URL
+  const [profilePictureURL, setProfilePictureURL] = useState(null);
+
+  // Fetch student data from Supabase
   const fetchStudentData = async () => {
     const {
       data: { user },
@@ -27,9 +32,10 @@ const StudentDashboard = () => {
         .eq("id", user.id)
         .single();
 
+      // Set profile picture URL
       setProfilePictureURL(
         `https://mlklnfeqqzyntwystzmv.supabase.co/storage/v1/object/public/profile-picture/profile-picture/${user.id}`
-      ); // Set the profile picture URL
+      );
 
       if (studentError || programError) {
         console.error(studentError || programError);
@@ -38,16 +44,17 @@ const StudentDashboard = () => {
       }
     }
 
-    setIsLoading(false);
+    setIsLoading(false); // Set loading status to false
   };
 
   useEffect(() => {
     fetchStudentData();
   }, []);
 
+  // Handle user sign out
   const handleSignOut = async () => {
     await supabase.auth.signOut();
-    navigate("/login");
+    navigate("/login"); // Navigate to the login page after sign out
   };
 
   return (
@@ -82,7 +89,7 @@ const StudentDashboard = () => {
                             src={profilePictureURL}
                             alt="Profile"
                             className="rounded-circle me-3"
-                            style={{ width: "50px", height: "50px" }}
+                            style={{ width: "75px", height: "75px" }}
                           />
                         )}
                         <div>
@@ -91,7 +98,7 @@ const StudentDashboard = () => {
                             <br />
                             {studentData.firstName} {studentData.lastName}
                           </p>
-                          <p className="mb-0" style={{ marginTop: "10px" }}>
+                          <p className="mb-0" style={{ marginTop: "16px" }}>
                             <strong>Email</strong>
                             <br /> {studentData.email}
                           </p>

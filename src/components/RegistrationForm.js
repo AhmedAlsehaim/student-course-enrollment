@@ -1,3 +1,4 @@
+import React from "react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { supabase } from "../supabaseClient.js";
@@ -6,24 +7,34 @@ import { useNavigate, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const RegistrationForm = () => {
+  // Initialize useForm to manage form state and validation
   const {
     register,
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm();
 
+  // State for loading indicator, profile picture, and error messages
   const [loading, setLoading] = useState(false);
   const [profilePicture, setProfilePicture] = useState(null);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
-  const tempPhotoURL = Date.now();
 
+  // Initialize navigation hook for redirecting after successful registration
+  const navigate = useNavigate();
+  const tempPhotoURL = Date.now(); // Not sure about the purpose of this
+
+  // Watch the value of the "password" field for validation
+  const password = watch("password");
+
+  // Handle profile picture selection
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     setProfilePicture(file);
   };
 
+  // Upload profile picture to Supabase storage
   const uploadProfilePicture = async (file) => {
     const {
       data: { user },
@@ -39,11 +50,18 @@ const RegistrationForm = () => {
     return data.Key;
   };
 
+  // Handle form submission
   const onSubmit = async (formData) => {
     setLoading(true);
 
     try {
-      // Sign up the user
+      // Validate password and password confirmation
+      if (formData.password !== formData.passwordConfirm) {
+        setError("Passwords do not match");
+        setLoading(false);
+        return;
+      }
+      // Sign up the user using Supabase Auth
       const { user, error: signUpError } = await supabase.auth.signUp({
         email: formData.email,
         password: formData.password,
@@ -53,10 +71,12 @@ const RegistrationForm = () => {
         throw new Error(signUpError.message);
       }
 
+      // Upload profile picture if provided
       const profilePictureKey = profilePicture
         ? await uploadProfilePicture(profilePicture)
         : null;
 
+      // Insert user data into Supabase table
       const { data: student, error: insertError } = await supabase
         .from("students")
         .insert([
@@ -74,21 +94,25 @@ const RegistrationForm = () => {
         throw new Error(insertError.message);
       }
 
+      // Display success message, reset the form, and navigate to graduate programs page
       toast.success("Registration successful!");
       reset();
       navigate("/graduate-programs");
     } catch (error) {
+      // Display error message and log error to console
       toast.error("Registration failed. Please try again.");
-
       setError("Invalid registration credentials");
       console.error(error);
     }
 
-    setLoading(false);
+    setLoading(false); // Set loading indicator to false
   };
 
   return (
-    <div style={{ maxWidth: "516px" }} className="container mt-5">
+    <div
+      style={{ maxWidth: "516px" }}
+      className="container mt-5 justify-content-center card shadow py-4"
+    >
       <h2 className="text-center mb-4">Student Registration</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* First Name */}
@@ -176,7 +200,27 @@ const RegistrationForm = () => {
             <span className="text-danger">{errors.password.message}</span>
           )}
         </div>
-
+        {/* Password Confirmation */}
+        <div className="mb-3">
+          <label htmlFor="passwordConfirm" className="form-label">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="passwordConfirm"
+            {...register("passwordConfirm", {
+              required: "This field is required",
+              validate: (value) =>
+                value === password || "Passwords do not match",
+            })}
+            className="form-control"
+          />
+          {errors.passwordConfirm && (
+            <span className="text-danger">
+              {errors.passwordConfirm.message}
+            </span>
+          )}
+        </div>
         {/* Profile Picture */}
         <div className="mb-3">
           <label htmlFor="profilePicture" className="form-label">

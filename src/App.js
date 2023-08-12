@@ -4,17 +4,25 @@ import GraduatePrograms from "./components/GraduatePrograms";
 import LoginForm from "./components/LoginForm";
 import StudentDashboard from "./components/StudentDashboard";
 import NotFound from "./components/NotFound";
-import { Button } from "react-bootstrap";
 
 function App() {
+  const appStyle = {
+    backgroundColor: "#3CB4E5",
+    minHeight: "100vh",
+  };
+
   return (
-    <Routes>
-      <Route path="/" element={<RegistrationForm />} />
-      <Route path="/graduate-programs" element={<GraduatePrograms />} />
-      <Route path="/student-dashboard" element={<StudentDashboard />} />
-      <Route path="/login" element={<LoginForm />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
+    <div style={appStyle}>
+      {" "}
+      {/* Apply background color here */}
+      <Routes>
+        <Route path="/" element={<RegistrationForm />} />
+        <Route path="/graduate-programs" element={<GraduatePrograms />} />
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/login" element={<LoginForm />} />
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </div>
   );
 }
 

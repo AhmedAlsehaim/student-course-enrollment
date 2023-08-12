@@ -18,34 +18,22 @@ const LoginForm = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
+    console.log(data.email); // Check if the email value is correct
+    console.log(data.password);
     try {
-      const { error, data: userData } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email: data.email,
         password: data.password,
       });
 
-      // if (error) {
-      //   throw new Error(error.message);
-      // }
-      // console.log(userData);
-      // const { data: programData, error: programError } = await supabase
-      //   .from("userProgram")
-      //   .select("id")
-      //   .eq("id", userData.id)
-      //   .single();
-      // console.log(programData);
-
-      // if (!programData) {
-      //   navigate("/graduate-programs");
-      // } else {
-      //   toast.success("Login successful!");
-      //   // Navigate to StudentDashboard after successful login
-      //   navigate("/student-dashboard");
-      // }
+      if (error) {
+        throw new Error(error.message);
+      }
 
       toast.success("Login successful!");
       // Navigate to StudentDashboard after successful login
       navigate("/student-dashboard");
+      console.log("login successful!");
     } catch (error) {
       toast.error(error.message);
       setError(error.message);
@@ -54,8 +42,30 @@ const LoginForm = () => {
     setLoading(false);
   };
 
+  // if (error) {
+  //   throw new Error(error.message);
+  // }
+  // console.log(userData);
+  // const { data: programData, error: programError } = await supabase
+  //   .from("userProgram")
+  //   .select("id")
+  //   .eq("id", userData.id)
+  //   .single();
+  // console.log(programData);
+
+  // if (!programData) {
+  //   navigate("/graduate-programs");
+  // } else {
+  //   toast.success("Login successful!");
+  //   // Navigate to StudentDashboard after successful login
+  //   navigate("/student-dashboard");
+  // }
+
   return (
-    <div style={{ maxWidth: "516px" }} className="container mt-5">
+    <div
+      style={{ maxWidth: "516px" }}
+      className="container mt-5 justify-content-center card shadow py-4"
+    >
       <h2 className="text-center mb-4">Student Login</h2>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Email */}
@@ -95,7 +105,7 @@ const LoginForm = () => {
           )}
         </div>
 
-        {error && <span className="text-danger">{error}</span>}
+        {error && <p className="text-danger">{error}</p>}
         <button type="submit" className="btn btn-primary" disabled={loading}>
           {loading ? "Logging in..." : "Login"}
         </button>
