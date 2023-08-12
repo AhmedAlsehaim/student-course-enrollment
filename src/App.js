@@ -1,24 +1,20 @@
-import logo from './logo.svg';
-import './App.css';
+import { Routes, Route } from "react-router-dom";
+import RegistrationForm from "./components/RegistrationForm";
+import GraduatePrograms from "./components/GraduatePrograms";
+import LoginForm from "./components/LoginForm";
+import StudentDashboard from "./components/StudentDashboard";
+import NotFound from "./components/NotFound";
+import { Button } from "react-bootstrap";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Routes>
+      <Route path="/" element={<RegistrationForm />} />
+      <Route path="/graduate-programs" element={<GraduatePrograms />} />
+      <Route path="/student-dashboard" element={<StudentDashboard />} />
+      <Route path="/login" element={<LoginForm />} />
+      <Route path="*" element={<NotFound />} />
+    </Routes>
   );
 }
 
